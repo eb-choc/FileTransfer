@@ -21,11 +21,18 @@ type DirFile struct {
 
 func InitRouter(app *iris.Application) {
 
-	app.Get("/index", func(ctx iris.Context) {
+	app.Get("/", func(ctx iris.Context) {
 		loadDirFiles(ctx, "")
+		ctx.ViewData("uploaded", ctx.URLParam("uploaded"))
+		ctx.ViewData("time", ctx.URLParam("time"))
 		ctx.View("index.html")
 	})
-
+	app.Get("/index", func(ctx iris.Context) {
+		loadDirFiles(ctx, "")
+		ctx.ViewData("uploaded", ctx.URLParam("uploaded"))
+		ctx.ViewData("time", ctx.URLParam("time"))
+		ctx.View("index.html")
+	})
 	app.Post("/files/transfer", func(ctx iris.Context) {
 		file, info, err := ctx.FormFile("file")
 		if err != nil {
@@ -42,10 +49,7 @@ func InitRouter(app *iris.Application) {
 		}
 		defer out.Close()
 		io.Copy(out, file)
-		ctx.ViewData("uploaded", 1)
-		ctx.ViewData("time", time.Now().Format("2006-01-02 15:04:05"))
-		loadDirFiles(ctx, "")
-		ctx.View("index.html")
+		ctx.Redirect("/index?uploaded=1&t=" + time.Now().Format("2006-01-02 15:04:05"), 200);
 	})
 	app.Get("/dir", func(ctx iris.Context) {
 		path := ctx.URLParam("path")
