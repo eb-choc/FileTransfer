@@ -49,7 +49,7 @@ func InitRouter(app *iris.Application) {
 		}
 		defer out.Close()
 		io.Copy(out, file)
-		ctx.Redirect("/index?uploaded=1&t=" + time.Now().Format("2006-01-02 15:04:05"), 200);
+		ctx.Redirect("/index?uploaded=1&time=" + time.Now().Format("2006-01-02 15:04:05"));
 	})
 	app.Get("/dir", func(ctx iris.Context) {
 		path := ctx.URLParam("path")
